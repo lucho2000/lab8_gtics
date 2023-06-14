@@ -5,11 +5,14 @@ import com.example.lab8_gtics.entity.Evento;
 import com.example.lab8_gtics.entity.TipoTicket;
 import com.example.lab8_gtics.repository.EventoRepository;
 import com.example.lab8_gtics.repository.TipoTicketRepository;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +79,15 @@ public class EventoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseJson);
     }
 
+    public List<Evento> listarEventosBasicAuth() {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication("userGtics,", "wUiC694O^cuE")
+                .build();
+        ResponseEntity<Evento[]> response = restTemplate.getForEntity(
+                "http://localhost:8080/api/product", Evento[].class);
+
+        return Arrays.asList(response.getBody());
+    }
 
 
     @GetMapping("/eventoConTipoDeTicket/{id}")
